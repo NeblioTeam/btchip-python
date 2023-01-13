@@ -86,6 +86,7 @@ class bitcoinTransaction:
 
 	def __init__(self, data=None):
 		self.version = ""
+		self.time = ""
 		self.inputs = []
 		self.outputs = []
 		self.lockTime = ""
@@ -94,6 +95,8 @@ class bitcoinTransaction:
 		if data is not None:
 			offset = 0
 			self.version = data[offset:offset + 4]
+			offset += 4
+			self.time = data[offset:offset + 4]
 			offset += 4
 			if (data[offset] == 0) and (data[offset + 1] != 0):
 				offset += 2
@@ -125,6 +128,7 @@ class bitcoinTransaction:
 			useWitness = True
 		result = []
 		result.extend(self.version)
+		result.extend(self.time)
 		if useWitness:
 			result.append(0x00)
 			result.append(0x01)
@@ -149,6 +153,7 @@ class bitcoinTransaction:
 
 	def __str__(self):
 		buf =  "Version : " + hexlify(self.version) + "\r\n"
+		buf =  "Time : " + hexlify(self.time) + "\r\n"
 		index = 1
 		for trinput in self.inputs:
 			buf += "Input #" + str(index) + "\r\n"
